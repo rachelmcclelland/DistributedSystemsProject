@@ -43,12 +43,13 @@ public final class Password {
       "pty.proto\"/\n\013HashRequest\022\016\n\006userID\030\001 \001(\005" +
       "\022\020\n\010password\030\002 \001(\t\"D\n\014HashResponse\022\016\n\006us" +
       "erID\030\001 \001(\005\022\026\n\016hashedPassword\030\002 \001(\t\022\014\n\004sa" +
-      "lt\030\003 \001(\014\"3\n\017ValidateRequest\022\016\n\006userID\030\001 " +
-      "\001(\005\022\020\n\010password\030\002 \001(\t2\221\001\n\017PasswordServic" +
-      "e\0229\n\004hash\022\027.ie.gmit.ds.HashRequest\032\030.ie." +
-      "gmit.ds.HashResponse\022C\n\010validate\022\033.ie.gm" +
-      "it.ds.ValidateRequest\032\032.google.protobuf." +
-      "BoolValueB\016\n\nie.gmit.dsP\001b\006proto3"
+      "lt\030\003 \001(\014\"I\n\017ValidateRequest\022\026\n\016hashedPas" +
+      "sword\030\001 \001(\014\022\020\n\010password\030\002 \001(\t\022\014\n\004salt\030\003 " +
+      "\001(\0142\221\001\n\017PasswordService\0229\n\004hash\022\027.ie.gmi" +
+      "t.ds.HashRequest\032\030.ie.gmit.ds.HashRespon" +
+      "se\022C\n\010validate\022\033.ie.gmit.ds.ValidateRequ" +
+      "est\032\032.google.protobuf.BoolValueB\016\n\nie.gm" +
+      "it.dsP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -73,7 +74,7 @@ public final class Password {
     internal_static_ie_gmit_ds_ValidateRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ie_gmit_ds_ValidateRequest_descriptor,
-        new java.lang.String[] { "UserID", "Password", });
+        new java.lang.String[] { "HashedPassword", "Password", "Salt", });
     com.google.protobuf.WrappersProto.getDescriptor();
     com.google.protobuf.EmptyProto.getDescriptor();
   }

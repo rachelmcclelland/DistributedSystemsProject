@@ -8,9 +8,9 @@ public interface ValidateRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int32 userID = 1;</code>
+   * <code>bytes hashedPassword = 1;</code>
    */
-  int getUserID();
+  com.google.protobuf.ByteString getHashedPassword();
 
   /**
    * <code>string password = 2;</code>
@@ -21,4 +21,9 @@ public interface ValidateRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getPasswordBytes();
+
+  /**
+   * <code>bytes salt = 3;</code>
+   */
+  com.google.protobuf.ByteString getSalt();
 }

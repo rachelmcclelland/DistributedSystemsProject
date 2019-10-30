@@ -45,24 +45,21 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
                     .build();
 
             validatePass = Passwords.isExpectedPassword(passwordChar, salt, hashedpassword);
-            System.out.println("User ID: " + userId + "Password: " + password + "Hashed Password: " + hashedpassword);
-            System.out.println(validatePass);
+            System.out.println("User ID: " + userId + "\nPassword: " + password + "\nHashed Password: " + hashedpassword);
+
+            if(validatePass)
+            {
+                System.out.println("Password and Hashed Password match");
+            }
+            else
+            {
+                System.out.println("Password and Hashed Password do not match");
+            }
 
         }
-        catch (RuntimeException e)
-        {
+        catch (RuntimeException e) {
             Logger.getLogger("error");
         }
-
-
-
-
-
-        // use john frenches code for hash
-        // build repsonse using builder
-
-
-        // send response back after
     }
 
     @Override
