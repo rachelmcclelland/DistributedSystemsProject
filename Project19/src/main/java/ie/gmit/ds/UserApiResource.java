@@ -46,7 +46,7 @@ public class UserApiResource {
     public Response createUser(UserAccount user) throws URISyntaxException
     {
         Set<ConstraintViolation<UserAccount>> violations = validator.validate(user);
-        UserAccount e = UserDB.getUser(user.getUserID());
+        UserAccount u = UserDB.getUser(user.getUserID());
         if (violations.size() > 0) {
             ArrayList<String> validationMessages = new ArrayList<String>();
             for (ConstraintViolation<UserAccount> violation : violations) {
@@ -54,9 +54,9 @@ public class UserApiResource {
             }
             return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
         }
-        if (e != null) {
+        if (u != null) {
             UserDB.updateUser(user.getUserID(), user);
-            return Response.created(new URI("/employees/" + user.getUserID()))
+            return Response.created(new URI("/users/" + user.getUserID()))
                     .build();
         } else {
             return Response.status(Status.NOT_FOUND).build();
@@ -65,7 +65,7 @@ public class UserApiResource {
 
     @PUT
     @Path("/{id}")
-    public Response updateEmployeeById(@PathParam("id") Integer id, UserAccount user) {
+    public Response updateUserById(@PathParam("id") Integer id, UserAccount user) {
         // validation
         Set<ConstraintViolation<UserAccount>> violations = validator.validate(user);
         UserAccount u = UserDB.getUser(user.getUserID());
