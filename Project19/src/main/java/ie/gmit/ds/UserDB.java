@@ -22,6 +22,11 @@ public class UserDB {
         return users.get(id);
     }
 
+    public static void createUser(Integer id, UserAccount user)
+    {
+        users.put(id, user);
+    }
+
     public static void updateUser(Integer id, UserAccount user){
         users.put(id, user);
     }

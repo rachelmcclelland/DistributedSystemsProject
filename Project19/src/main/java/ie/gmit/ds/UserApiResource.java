@@ -59,7 +59,11 @@ public class UserApiResource {
             return Response.created(new URI("/users/" + user.getUserID()))
                     .build();
         } else {
-            return Response.status(Status.NOT_FOUND).build();
+            UserDB.createUser(user.getUserID(), user);
+            return Response.created(new URI("/users/" + user.getUserID()))
+                    .build();
+
+            //return Response.status(Status.NOT_FOUND).build();
         }
     }
 
