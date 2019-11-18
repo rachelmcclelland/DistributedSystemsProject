@@ -1,5 +1,7 @@
 package ie.gmit.ds;
 
+import com.google.protobuf.ByteString;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.net.URI;
@@ -43,7 +45,7 @@ public class UserApiResource {
     }
 
     @POST
-    public Response createUser(UserAccount user) throws URISyntaxException
+    public Response createUser(UserAccount user) throws Exception
     {
         Set<ConstraintViolation<UserAccount>> violations = validator.validate(user);
         UserAccount u = UserDB.getUser(user.getUserID());
@@ -55,9 +57,17 @@ public class UserApiResource {
             return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
         }
         if (u != null) {
+            PasswordClient pClient = new PasswordClient("localhost", 50551);
             UserDB.updateUser(user.getUserID(), user);
+            System.out.println("password: " +  user.getPassword());
+            ByteString hashedPwd = pClient.hashPwd(user.getPassword(), user.getUserID());
+
+            System.out.println("hashed password" + hashedPwd);
+
             return Response.created(new URI("/users/" + user.getUserID()))
                     .build();
+
+
         } else {
             UserDB.createUser(user.getUserID(), user);
             return Response.created(new URI("/users/" + user.getUserID()))

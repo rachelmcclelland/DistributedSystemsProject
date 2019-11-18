@@ -1,6 +1,5 @@
 package ie.gmit.ds;
 
-import com.google.protobuf.BoolValue;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -76,6 +75,32 @@ public class PasswordClient {
                     .setPassword(password)
                     .setHashedPassword(response.getHashedPasswordBytes())
                     .build();
+        }
+        finally {
+            // Don't stop process, keep alive to receive async response
+            Thread.currentThread().join();
+        }
+    }
+
+    public ByteString hashPwd(String password, int userID) throws Exception
+    {
+        PasswordClient pClient = new PasswordClient("localhost", 50551);
+        ValidateRequest vr = null;
+        HashRequest hashRequest = HashRequest.newBuilder()
+                .setPassword(password)
+                .setUserID(userID)
+                .build();
+
+        try {
+            HashResponse response = pClient.hashPasswword(hashRequest);
+
+            vr = ValidateRequest.newBuilder()
+                    .setSalt(response.getSalt())
+                    .setPassword(password)
+                    .setHashedPassword(response.getHashedPasswordBytes())
+                    .build();
+
+            return vr.getHashedPassword();
         }
         finally {
             // Don't stop process, keep alive to receive async response
