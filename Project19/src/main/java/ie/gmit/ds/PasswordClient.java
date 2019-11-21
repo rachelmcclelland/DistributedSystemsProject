@@ -1,110 +1,58 @@
 package ie.gmit.ds;
 
-import com.google.protobuf.ByteString;
+import com.google.protobuf.BoolValue;
+import com.google.protobuf.Empty;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.grpc.stub.StreamObserver;
 
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PasswordClient {
-
     private static final Logger logger =
             Logger.getLogger(PasswordClient.class.getName());
     private final ManagedChannel channel;
-    // private final PasswordServiceGrpc.PasswordServiceStub asyncPasswordService;
-    private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPasswordService;
+    private final PasswordServiceGrpc.PasswordServiceStub asyncPasswordService;
+    private final PasswordServiceGrpc.PasswordServiceBlockingStub syncPassowrdService;
 
-    // Constructor
+    //Connect to the server with a socket(IP and port number).
     public PasswordClient(String host, int port) {
         channel = ManagedChannelBuilder
                 .forAddress(host, port)
                 .usePlaintext()
                 .build();
-        syncPasswordService = PasswordServiceGrpc.newBlockingStub(channel);
+        asyncPasswordService = PasswordServiceGrpc.newStub(channel);
+        syncPassowrdService = PasswordServiceGrpc.newBlockingStub(channel);
     }
-
+    //Shutdown the server if interupted.
     public void shutdown() throws InterruptedException {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public HashResponse hashPasswword(HashRequest hr) {
-        // hash the password
-        logger.info("Hashing Password " + hr);
-        HashResponse hashResponse = null;
-
+    //Make asychronous hash request call to the server
+    public void hashUserpwd(HashRequest newHashRequest, StreamObserver<HashResponse> callback) {
         try {
-            // hashes the password
-            hashResponse = syncPasswordService.hash(hr);
-            logger.info(("Hashed Password: " + hashResponse.getHashedPassword()));
+            asyncPasswordService.hash(newHashRequest, callback);
         } catch (StatusRuntimeException ex) {
             logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
-            return hashResponse;
         }
-
-        return hashResponse;
     }
 
-    public static void main(String[] args) throws Exception {
-        PasswordClient pClient = new PasswordClient("localhost", 50551);
-        ValidateRequest vr = null;
-        Scanner console = new Scanner(System.in);
-
-        int userID;
-        String password;
-
-        System.out.println("Enter the user ID: ");
-        userID = console.nextInt();
-
-        System.out.println("Enter password: ");
-        password = console.next();
-
-        HashRequest hashRequest = HashRequest.newBuilder()
-                .setPassword(password)
-                .setUserID(userID)
-                .build();
-
+    //Make a sychronous validation request to the server and return a boolean response
+    public boolean checkValidation(ValidateRequest requestValidate) {
+        boolean validationResponse = false;
         try {
-            HashResponse response = pClient.hashPasswword(hashRequest);
-
-            vr = ValidateRequest.newBuilder()
-                    .setSalt(response.getSalt())
-                    .setPassword(password)
-                    .setHashedPassword(response.getHashedPasswordBytes())
-                    .build();
+            validationResponse = syncPassowrdService.validate(requestValidate).getValue();
+            return validationResponse;
+        } catch (
+                StatusRuntimeException ex) {
+            logger.log(Level.WARNING, "RPC failed: {0}", ex.getStatus());
         }
-        finally {
-            // Don't stop process, keep alive to receive async response
-            Thread.currentThread().join();
-        }
+        return validationResponse;
     }
 
-    public ByteString hashPwd(String password, int userID) throws Exception
-    {
-        PasswordClient pClient = new PasswordClient("localhost", 50551);
-        ValidateRequest vr = null;
-        HashRequest hashRequest = HashRequest.newBuilder()
-                .setPassword(password)
-                .setUserID(userID)
-                .build();
-
-        try {
-            HashResponse response = pClient.hashPasswword(hashRequest);
-
-            vr = ValidateRequest.newBuilder()
-                    .setSalt(response.getSalt())
-                    .setPassword(password)
-                    .setHashedPassword(response.getHashedPasswordBytes())
-                    .build();
-
-            return vr.getHashedPassword();
-        }
-        finally {
-            // Don't stop process, keep alive to receive async response
-            Thread.currentThread().join();
-        }
-    }
-}// PasswordClient class
+}

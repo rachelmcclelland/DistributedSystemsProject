@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.logging.Logger;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.validation.ConstraintViolation;
@@ -19,6 +20,8 @@ import javax.validation.Validator;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserApiResource {
 
+    private static final Logger logger =
+            Logger.getLogger(UserApiResource.class.getName());
     private final Validator validator;
 
     public UserApiResource(Validator validator)
@@ -48,6 +51,8 @@ public class UserApiResource {
     public Response createUser(UserAccount user) throws Exception
     {
         Set<ConstraintViolation<UserAccount>> violations = validator.validate(user);
+        PasswordClient pClient = new PasswordClient("localhost", 50551);
+
         UserAccount u = UserDB.getUser(user.getUserID());
         if (violations.size() > 0) {
             ArrayList<String> validationMessages = new ArrayList<String>();
@@ -56,24 +61,18 @@ public class UserApiResource {
             }
             return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
         }
-        if (u != null) {
-            PasswordClient pClient = new PasswordClient("localhost", 50551);
-            UserDB.updateUser(user.getUserID(), user);
-            System.out.println("password: " +  user.getPassword());
-            ByteString hashedPwd = pClient.hashPwd(user.getPassword(), user.getUserID());
-
-            System.out.println("hashed password" + hashedPwd);
-
-            return Response.created(new URI("/users/" + user.getUserID()))
+        if (u == null) {
+            //user.setSalt(response.getSalt());
+            UserDB.createUser(user.getUserID(), user);
+            return Response.ok("User Created")
                     .build();
-
 
         } else {
-            UserDB.createUser(user.getUserID(), user);
-            return Response.created(new URI("/users/" + user.getUserID()))
-                    .build();
+//            user.setHashedPassword(response.getHashedPassword());
+//            user.setSalt(response.getSalt());
+            //UserDB.createUser(user.getUserID(), user);
 
-            //return Response.status(Status.NOT_FOUND).build();
+            return Response.status(Status.NOT_FOUND).entity("User already exists").build();
         }
     }
 

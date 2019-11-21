@@ -42,7 +42,7 @@ public final class Password {
       "tobuf/wrappers.proto\032\033google/protobuf/em" +
       "pty.proto\"/\n\013HashRequest\022\016\n\006userID\030\001 \001(\005" +
       "\022\020\n\010password\030\002 \001(\t\"D\n\014HashResponse\022\016\n\006us" +
-      "erID\030\001 \001(\005\022\026\n\016hashedPassword\030\002 \001(\t\022\014\n\004sa" +
+      "erID\030\001 \001(\005\022\026\n\016hashedPassword\030\002 \001(\014\022\014\n\004sa" +
       "lt\030\003 \001(\014\"I\n\017ValidateRequest\022\026\n\016hashedPas" +
       "sword\030\001 \001(\014\022\020\n\010password\030\002 \001(\t\022\014\n\004salt\030\003 " +
       "\001(\0142\221\001\n\017PasswordService\0229\n\004hash\022\027.ie.gmi" +

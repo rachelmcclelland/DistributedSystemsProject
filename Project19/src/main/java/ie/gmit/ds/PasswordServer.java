@@ -15,12 +15,12 @@ public class PasswordServer {
     private static final int PORT = 50551;
 
     private void start(int port) throws IOException {
-        grpcServer = ServerBuilder.forPort(PORT)
+        grpcServer = ServerBuilder.forPort(port)
                 .addService(new PasswordServiceImpl())
                 .build()
                 .start();
 
-        logger.info("Server started, listening on " + port);
+        logger.info("Server started, listening on " + PORT);
     }
 
     private void stop() {

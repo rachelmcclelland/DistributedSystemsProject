@@ -25,22 +25,20 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
         try {
             // request password
             password = request.getPassword();
-
             passwordChar = password.toCharArray();
             // gets user id
             userId = request.getUserID();
-
             //gets the salt
             salt = Passwords.getNextSalt();
-
             // hash the password
-            hashedpassword = Passwords.hash(passwordChar, salt);
+            hashedpassword  = Passwords.hash(passwordChar, salt);
 
             //logger.info("Password is: " + password);
 
+            //Build object
             HashResponse hr = HashResponse.newBuilder()
                     .setSalt(ByteString.copyFrom(salt))
-                    .setHashedPassword(String.valueOf(hashedpassword))
+                    .setHashedPassword(ByteString.copyFrom(hashedpassword))
                     .setUserID(userId)
                     .build();
 
@@ -56,15 +54,34 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
                 System.out.println("Password and Hashed Password do not match");
             }
 
+            responseObserver.onNext(hr);
+        } catch (RuntimeException ex) {
+            responseObserver.onNext(null);
         }
-        catch (RuntimeException e) {
-            Logger.getLogger("error");
-        }
+        responseObserver.onCompleted();
+
     }
 
     @Override
     public void validate(ValidateRequest request, StreamObserver<BoolValue> responseObserver) {
-        super.validate(request, responseObserver);
+        try {
+
+            String pwd = request.getPassword();
+            char[] pwdCharArray = pwd.toCharArray();
+            byte[] salt = Passwords.getNextSalt();
+            byte[] hashedPassword  = Passwords.hash(pwdCharArray,salt);
+
+            logger.info("Checking the validity of password " );
+            boolean validationRequest = Passwords.isExpectedPassword(pwdCharArray,salt,hashedPassword );
+            if(validationRequest==true){
+                responseObserver.onNext(BoolValue.newBuilder().setValue(true).build());
+            }else{
+                responseObserver.onNext(BoolValue.newBuilder().setValue(false).build());
+            }
+        } catch (RuntimeException ex) {
+            responseObserver.onNext(BoolValue.newBuilder().setValue(false).build());
+        }
+        responseObserver.onCompleted();
     }
 
 }
