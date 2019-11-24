@@ -66,13 +66,13 @@ public class PasswordServiceImpl extends PasswordServiceGrpc.PasswordServiceImpl
     public void validate(ValidateRequest request, StreamObserver<BoolValue> responseObserver) {
         try {
 
-            String pwd = request.getPassword();
-            char[] pwdCharArray = pwd.toCharArray();
-            byte[] salt = Passwords.getNextSalt();
-            byte[] hashedPassword  = Passwords.hash(pwdCharArray,salt);
+            password = request.getPassword();
+            passwordChar = password.toCharArray();
+            salt = Passwords.getNextSalt();
+            hashedpassword  = request.getHashedPassword().toByteArray();
 
-            logger.info("Checking the validity of password " );
-            boolean validationRequest = Passwords.isExpectedPassword(pwdCharArray,salt,hashedPassword );
+            boolean validationRequest = Passwords.isExpectedPassword(passwordChar, salt, hashedpassword);
+
             if(validationRequest==true){
                 responseObserver.onNext(BoolValue.newBuilder().setValue(true).build());
             }else{

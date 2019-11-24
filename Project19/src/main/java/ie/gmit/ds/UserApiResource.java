@@ -23,6 +23,8 @@ public class UserApiResource {
     private static final Logger logger =
             Logger.getLogger(UserApiResource.class.getName());
     private final Validator validator;
+    PasswordClient pClient = new PasswordClient("localhost", 50551);
+
 
     public UserApiResource(Validator validator)
     {
@@ -51,7 +53,6 @@ public class UserApiResource {
     public Response createUser(UserAccount user) throws Exception
     {
         Set<ConstraintViolation<UserAccount>> violations = validator.validate(user);
-        PasswordClient pClient = new PasswordClient("localhost", 50551);
 
         UserAccount u = UserDB.getUser(user.getUserID());
         if (violations.size() > 0) {
@@ -62,17 +63,11 @@ public class UserApiResource {
             return Response.status(Status.BAD_REQUEST).entity(validationMessages).build();
         }
         if (u == null) {
-            //user.setSalt(response.getSalt());
             UserDB.createUser(user.getUserID(), user);
-            return Response.ok("User Created")
-                    .build();
+            return Response.ok("User Created").build();
 
         } else {
-//            user.setHashedPassword(response.getHashedPassword());
-//            user.setSalt(response.getSalt());
-            //UserDB.createUser(user.getUserID(), user);
-
-            return Response.status(Status.NOT_FOUND).entity("User already exists").build();
+            return Response.status(Status.NOT_FOUND).entity("User ID already exists").build();
         }
     }
 

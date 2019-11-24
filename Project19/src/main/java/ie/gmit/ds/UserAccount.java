@@ -32,10 +32,11 @@ public class UserAccount {
         // Needed for Jackson deserialisation
     }
 
-    public UserAccount(int userID, String userName, String email, String hashedPassword, String salt) {
+    public UserAccount(int userID, String userName, String email, String password, String hashedPassword, String salt) {
         this.userID = userID;
         this.userName = userName;
         this.email = email;
+        this.password = password;
         this.hashedPassword = hashedPassword;
         this.salt = salt;
     }
@@ -44,8 +45,11 @@ public class UserAccount {
         this.userID = userID;
         this.userName = userName;
         this.email = email;
-        this.hashedPassword = hashedPassword;
-        this.salt = salt;
+    }
+
+    public UserAccount(int userID, String email) {
+        this.userID = userID;
+        this.email = email;
     }
 
     public int getUserID() {

@@ -2,6 +2,7 @@ ie\gmit\ds\HashRequest.class
 ie\gmit\ds\PasswordServiceGrpc$1.class
 ie\gmit\ds\UserApiResource.class
 ie\gmit\ds\ValidateRequest$1.class
+ie\gmit\ds\LoginAPIResource.class
 ie\gmit\ds\UserDB$1.class
 ie\gmit\ds\HashResponse$Builder.class
 ie\gmit\ds\UserApiConfig.class

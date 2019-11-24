@@ -18,4 +18,11 @@ asking the user to try again
 ### Github URL
 https://github.com/rachelmcclelland/DistributedSystemsProject
 
+## Part Two
+Design a REST API for a User Account web service using OpenAPI and SwaggerHub.
+
+### Changes made to part one
+My project kept hanging when trying to create a new user and hash the password for that account.
+I was able to fix the issue by editing the proto file. In HashRepsonse message, hashedPassword had a type of string. Changing it to type bytes instead resolved the issue allowing me to create a new user successfully and hash the password.
+
 
