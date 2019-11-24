@@ -1,13 +1,18 @@
 package ie.gmit.ds;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.protobuf.ByteString;
 import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.hibernate.validator.constraints.Length;
 
+@XmlRootElement
 public class UserAccount {
 
     @NotNull
@@ -47,6 +52,8 @@ public class UserAccount {
         this.email = email;
     }
 
+    @XmlElement
+    @JsonProperty
     public int getUserID() {
         return userID;
     }
@@ -55,6 +62,8 @@ public class UserAccount {
         this.userID = userID;
     }
 
+    @XmlElement
+    @JsonProperty
     public String getUserName() {
         return userName;
     }
@@ -63,6 +72,8 @@ public class UserAccount {
         this.userName = userName;
     }
 
+    @XmlElement
+    @JsonProperty
     public String getEmail() {
         return email;
     }
@@ -71,6 +82,8 @@ public class UserAccount {
         this.email = email;
     }
 
+    @XmlElement
+    @JsonProperty
     public String getPassword() {
         return password;
     }
