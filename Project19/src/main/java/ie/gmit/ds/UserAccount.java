@@ -23,16 +23,16 @@ public class UserAccount {
     private String password;
 
 
-    private String hashedPassword;
+    private ByteString hashedPassword;
 
 
-    private String salt;
+    private ByteString salt;
 
     public UserAccount() {
         // Needed for Jackson deserialisation
     }
 
-    public UserAccount(int userID, String userName, String email, String password, String hashedPassword, String salt) {
+    public UserAccount(int userID, String userName, String email, String password, ByteString hashedPassword, ByteString salt) {
         this.userID = userID;
         this.userName = userName;
         this.email = email;
@@ -44,11 +44,6 @@ public class UserAccount {
     public UserAccount(int userID, String userName, String email) {
         this.userID = userID;
         this.userName = userName;
-        this.email = email;
-    }
-
-    public UserAccount(int userID, String email) {
-        this.userID = userID;
         this.email = email;
     }
 
@@ -84,19 +79,19 @@ public class UserAccount {
         this.password = password;
     }
 
-    public String getHashedPassword() {
+    public ByteString getHashedPassword() {
         return hashedPassword;
     }
 
-    public void setHashedPassword(String hashedPassword) {
+    public void setHashedPassword(ByteString hashedPassword) {
         this.hashedPassword = hashedPassword;
     }
 
-    public String getSalt() {
+    public ByteString getSalt() {
         return salt;
     }
 
-    public void setSalt(String salt) {
+    public void setSalt(ByteString salt) {
         this.salt = salt;
     }
 }

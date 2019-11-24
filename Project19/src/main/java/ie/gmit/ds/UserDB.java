@@ -39,9 +39,8 @@ public class UserDB {
                 @Override
                 public void onNext(HashResponse hashResponse) {
 
-                    newUser = new UserAccount(user.getUserID(), user.getUserName(), user.getEmail(), user.getPassword(), hashResponse.getHashedPassword().toStringUtf8(), hashResponse.getSalt().toStringUtf8());
-                    //newUser.setHashedPassword(hashResponse.getHashedPassword().toStringUtf8());
-                    System.out.println("HASHED PASSWORD === " + hashResponse.getHashedPassword().toStringUtf8());
+                    newUser = new UserAccount(user.getUserID(), user.getUserName(), user.getEmail(), user.getPassword(), hashResponse.getHashedPassword(), hashResponse.getSalt());
+
                 }
 
                 @Override
@@ -52,7 +51,6 @@ public class UserDB {
                 //save the user to the database
                 @Override
                 public void onCompleted() {
-                    System.out.println("HASHED PASSWORD: " + newUser.getHashedPassword());
                     users.put(id, newUser);
                 }
             };
@@ -72,26 +70,18 @@ public class UserDB {
         users.remove(id);
     }
 
-    public static boolean login(UserAccount user){
+    public static boolean login(Integer id, UserAccount user){
         boolean validatePass = false;
 
-        int userID = user.getUserID();
-        System.out.println("ID: " + user.getUserID());
-        System.out.println("USERNAME: " + user.getUserName());
-        System.out.println("PASSWORD: " + user.getPassword());
-        System.out.println("HASHED PASSWORD: " + user.getHashedPassword());
-
         try {
-           // UserAccount user1 = getUser(userID);
+            UserAccount user1 = getUser(id);
             ValidateRequest vr = ValidateRequest.newBuilder()
-                    .setHashedPassword(ByteString.copyFromUtf8(user.getHashedPassword()))
+                    .setHashedPassword(user1.getHashedPassword())
                     .setPassword(user.getPassword())
-                    .setSalt(ByteString.copyFromUtf8(user.getSalt()))
+                    .setSalt(user1.getSalt())
                     .build();
 
             validatePass = pClient.checkValidation(vr);
-
-            System.out.println("IS VALID: "+ validatePass);
 
             return validatePass;
         } finally {

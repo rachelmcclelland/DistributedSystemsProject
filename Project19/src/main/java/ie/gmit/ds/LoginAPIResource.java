@@ -39,11 +39,7 @@ public class LoginAPIResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(validationMessages).build();
         }
 
-        System.out.println("VALIDATING PASSWORD");
-        System.out.println("HASHED PW: " + user1.getHashedPassword());
-        System.out.println("PASSWORD: " + user1.getPassword());
-        boolean validatePass = UserDB.login(user1);
-        System.out.println("BACK FROM VALIDATING");
+        boolean validatePass = UserDB.login(user.getUserID(), user);
 
         if(validatePass)
         {
